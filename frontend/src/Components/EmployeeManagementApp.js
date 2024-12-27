@@ -41,6 +41,7 @@ function EmployeeManagementApp() {
                         />
                     </div>
                     <EmployeeTable
+                        fetchEmployees = {fetchEmployees}
                         employees = {employeeData.employees}
                         pagination= {employeeData.pagination}
                     />

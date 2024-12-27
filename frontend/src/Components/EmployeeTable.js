@@ -3,11 +3,12 @@ import {Link} from 'react-router-dom';
 
 function EmployeeTable({
     employees,
-    pagination
+    pagination,
+    fetchEmployees
     }
 ) {
     const headers=['Name', 'Email', 'Phone', 'Department', 'Actions'];
-
+    const {currentPage, totalpages}=pagination;
     const TableRow = ({employee})=>{
         return <tr>
             <td>
@@ -36,7 +37,23 @@ function EmployeeTable({
             </td>
         </tr>
     }
-  return (
+    const pageNumber = Array.from ({length: totalpages}, (_,index)=> index +1);
+
+    const handleNextpage=()=>{
+        if(currentPage < totalpages){
+            handlePagination(currentPage +1);
+        }
+    }
+    const handlePreviouspage=()=>{
+        if(currentPage >1){
+            handlePagination(currentPage - 1);
+        }
+    }
+
+    const handlePagination = (currentPage)=>{
+        fetchEmployees('', currentPage, 5);
+    }
+    return (
     <>
         <table className='table table-striped'>
             <thead>
@@ -56,7 +73,36 @@ function EmployeeTable({
                 }
                    
             </tbody>
+            
         </table>
+        <div className='d-flex justify-content-between align-items-center my-3'>
+                <span className='badge bg-primary'>Page {currentPage} of {totalpages}</span>
+                <div>
+                    <button 
+                        className='btn btn-outline-primary me-2'
+                        onClick={()=> handlePreviouspage()}
+                        disabled={currentPage ===1}
+                        >
+                            Previous
+                    </button>
+                    {
+                        pageNumber.map((page)=>(
+                            <button 
+                                onClick={()=> handlePagination(page)}
+                                className={`btn btn-outline-primary me-1 ${ currentPage === page ? 'active' : ''}`}>
+                                {page}
+                            </button>
+                        ))
+                    }
+                    <button 
+                        className='btn btn-outline-primary ms-2'
+                        onClick={()=>handleNextpage()}
+                        disabled={totalpages === currentPage}
+                        >
+                            Next
+                    </button>
+                </div>
+            </div>
     </>
   )
 }
