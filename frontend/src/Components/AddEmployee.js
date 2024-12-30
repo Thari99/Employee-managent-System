@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
-import { CreateEmployee } from '../api';
+import React, { useEffect, useState } from 'react';
+import { CreateEmployee, UpdateEmployeeById } from '../api';
 import { notify } from '../utils';
 
-function AddEmployee({ showModal, setShowModal }) {
+function AddEmployee({ showModal, setShowModal,fetchEmployees,updateEmpObj }) {
   const [employee, setEmployee] = useState({
     name: '',
     email: '',
     phone: '',
     department: '',
-    salary: '',
+    salary: '', 
     profileImage: null,
   });
+  const [updateMode,setUpdateMode] = useState(false);
+  useEffect(()=>{
+    if(updateEmpObj){
+      setUpdateMode(true);
+      setEmployee(updateEmpObj)
+    }
+  },[updateEmpObj])
   const resetEmployeeState = ()=>{
     setEmployee({
       name: '',
@@ -35,12 +42,15 @@ function AddEmployee({ showModal, setShowModal }) {
     
     setEmployee({ ...employee, profileImage: e.target.files[0] }); // Update state with selected file
   };
-
+//Add or update Employee
   const handleSubmit=async(e)=>{
     e.preventDefault();
     console.log(employee);
     try {
-        const{success, message}= await CreateEmployee(employee);
+        const{success, message}= 
+          updateMode ? 
+            await UpdateEmployeeById(employee, employee._id): 
+            await CreateEmployee(employee);
         console.log(success, message);
         if(success){
           notify(message,'success')
@@ -49,6 +59,7 @@ function AddEmployee({ showModal, setShowModal }) {
         }
         setShowModal(false);
         resetEmployeeState();
+        fetchEmployees();
     } catch (err) {
       notify('Failed to create employee, try again','error')
     }
@@ -59,7 +70,9 @@ function AddEmployee({ showModal, setShowModal }) {
       <div className='modal-dialog' role='document'>
         <div className='modal-content'>
           <div className='modal-header'>
-            <h5>Add Employee</h5>
+            <h5>
+              {updateMode ? 'Update Employee':'Add Employee'}
+            </h5>
             <button type='button' className='btn-close' onClick={handleClose}></button>
           </div>
           <div className='modal-body'>
@@ -126,10 +139,14 @@ function AddEmployee({ showModal, setShowModal }) {
                   className='form-control'
                   name='profileImage'
                   onChange={handleFileChange}
-                  required
+                  
                 />
               </div>
-              <button className='btn btn-primary' type='submit'>Save</button>
+              <button className='btn btn-primary' type='submit'>
+                {
+                  updateMode ? 'Update' : 'save'
+                }
+              </button>
             </form>
           </div>
         </div>

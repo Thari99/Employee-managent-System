@@ -4,7 +4,8 @@ import {Link} from 'react-router-dom';
 function EmployeeTable({
     employees,
     pagination,
-    fetchEmployees
+    fetchEmployees,
+    handleupdateEmployee
     }
 ) {
     const headers=['Name', 'Email', 'Phone', 'Department', 'Actions'];
@@ -25,7 +26,7 @@ function EmployeeTable({
                     role='button'
                     data-bs-toggle="tooltip"
                     data-bs-placement="top"
-                    onClick={()=>{}}
+                    onClick={()=>handleupdateEmployee(employee)}
                 ></i>
                 <i
                     className='bi bi-trash-fill text-danger md-4'

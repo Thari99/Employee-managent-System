@@ -40,3 +40,28 @@ export const CreateEmployee = async(empObj)=>{
         return err; 
     }
 }
+
+export const UpdateEmployeeById = async (empObj, id) => {
+    const url = `${BASE_URL}/api/employees/${id}`;
+    console.log('url ', url);
+    // Create a FormData object
+    const formData = new FormData();
+
+    // Append all fields to the FormData object
+    for (const key in empObj) {
+        formData.append(key, empObj[key]);
+    }
+    // FormData handles the headers and content type
+    const options = {
+        method: 'PUT',
+        body: formData
+    };
+    try {
+        const result = await fetch(url, options);
+        const data = await result.json();
+        console.log('<---update--> ', data);
+        return data;
+    } catch (err) {
+        return err;
+    }
+};
