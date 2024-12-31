@@ -5,7 +5,8 @@ function EmployeeTable({
     employees,
     pagination,
     fetchEmployees,
-    handleupdateEmployee
+    handleupdateEmployee,
+    handleDeleteEmployee
     }
 ) {
     const headers=['Name', 'Email', 'Phone', 'Department', 'Actions'];
@@ -33,7 +34,7 @@ function EmployeeTable({
                     role='button'
                     data-bs-toggle="tooltip"
                     data-bs-placement="top"
-                    onClick={()=>{}}
+                    onClick={()=>handleDeleteEmployee(employee)}
                 ></i>
             </td>
         </tr>

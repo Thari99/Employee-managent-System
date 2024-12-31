@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import EmployeeTable from './EmployeeTable'
-import { GetAllEmployees } from '../api'
+import { DeleteEmployeeById, GetAllEmployees } from '../api'
 import AddEmployee from './AddEmployee'
 import { ToastContainer } from 'react-toastify';
+import { notify } from '../utils';
 
 function EmployeeManagementApp() {
     const [showModal, setShowModal]=useState(false);
@@ -20,6 +21,7 @@ function EmployeeManagementApp() {
         try {
             const {data} = await GetAllEmployees(search,page,limit);
             setEmployeeData(data);
+
         } catch (err) {
             console.log('Error',err);
         }
@@ -36,7 +38,19 @@ function EmployeeManagementApp() {
         setUpdateEmpObj(empObj);
         setShowModal(true);
     }
-
+    const handleDeleteEmployee = async(emp)=>{
+        try {
+            const {success, message} = await DeleteEmployeeById(emp._id);
+            if(success){
+                      notify(message,'success');
+                    }else{
+                      notify(message,'error');
+                    }
+        } catch (err) {
+            console.log('Error',err);
+            notify(err,'error')
+        }   
+    }
   return (
     <div className='d-flex flex-column justify-content-center align-items-center w-100 p-3'>
             <h1>Employee Management App</h1>
@@ -58,6 +72,7 @@ function EmployeeManagementApp() {
                         fetchEmployees = {fetchEmployees}
                         employees = {employeeData.employees}
                         pagination= {employeeData.pagination}
+                        handleDeleteEmployee = {handleDeleteEmployee}
                     />
                     <AddEmployee
                     updateEmpObj = {updateEmpObj}
