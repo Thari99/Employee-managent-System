@@ -51,6 +51,10 @@ function EmployeeManagementApp() {
             notify(err,'error')
         }   
     }
+    const handleSearch = (e)=>{
+        const term = e.target.value;
+        fetchEmployees(term);
+    }
   return (
     <div className='d-flex flex-column justify-content-center align-items-center w-100 p-3'>
             <h1>Employee Management App</h1>
@@ -62,6 +66,7 @@ function EmployeeManagementApp() {
                             Add
                         </button>
                         <input
+                            onChange={handleSearch}
                             type='text'
                             placeholder='Seach Employee....'
                             className='form-control w-50'

@@ -83,3 +83,21 @@ export const DeleteEmployeeById = async (id) => {
         return err;
     }
 }
+
+export const GetEmployeeById = async (id) => {
+    const url =`${BASE_URL}/api/employees/${id}`;
+    const options = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    try {
+        const result = await fetch(url, options);
+        const data = await result.json();
+        console.log(data);
+        return data;
+    } catch (err) {
+        return err;
+    }
+}
